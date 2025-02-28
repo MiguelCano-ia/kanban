@@ -1,6 +1,6 @@
 import { Board } from "@/components/kanban/board/Board";
 import { NavBar } from "@/components/kanban/NavBar";
-import { Toggle } from "@/components/shared/darkmode/Toggle";
+import { Toggle } from "@/components/darkmode/Toggle";
 
 export const metadata = {
   title: "Kanban Board",
@@ -9,8 +9,8 @@ export const metadata = {
 
 export default function KanbanPage() {
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
+    <div className="min-h-screen">
+      <nav className="shadow-sm bg-zinc-100 dark:bg-zinc-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex-shrink-0 flex items-center">

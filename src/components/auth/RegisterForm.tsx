@@ -1,56 +1,54 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useActionState } from "react";
 
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { register } from "@/actions/auth/register.action";
+import { useAuthStore } from "@/stores/auth.store";
 
 export const RegisterForm = () => {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const registerUser = useAuthStore((state) => state.registerUser);
+  const [state, action, pending] = useActionState(register, undefined);
 
-  async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault();
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-      // Here you would typically handle the registration logic
-      // For now, we'll just log to the console
-      console.log("Registration attempted");
-    }, 3000);
+  if (state && !state.errors) {
+    registerUser({ ...state });
   }
 
   return (
     <div className="grid gap-6">
-      <form onSubmit={onSubmit}>
+      <form action={action}>
         <div className="grid gap-4">
           <div className="grid gap-1">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="username">Username</Label>
             <Input
-              id="name"
+              id="username"
               placeholder="John Doe"
               type="text"
+              name="username"
               autoCapitalize="words"
-              autoComplete="name"
+              autoComplete="username"
               autoCorrect="off"
-              disabled={isLoading}
+              disabled={pending}
             />
           </div>
+          {state?.errors?.username && (
+            <p className="text-red-500 text-sm">{state.errors.username}</p>
+          )}
           <div className="grid gap-1">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               placeholder="name@example.com"
               type="email"
+              name="email"
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              disabled={isLoading}
+              disabled={pending}
             />
           </div>
           <div className="grid gap-1">
@@ -59,18 +57,20 @@ export const RegisterForm = () => {
               id="password"
               placeholder="Create a password"
               type="password"
+              name="password"
               autoCapitalize="none"
               autoComplete="new-password"
               autoCorrect="off"
-              disabled={isLoading}
+              disabled={pending}
             />
           </div>
-          <Button disabled={isLoading}>
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type="submit" disabled={pending}>
+            {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Create Account
           </Button>
         </div>
       </form>
+      {state?.errors && <p className="text-red-500">{state.errors.message}</p>}
     </div>
   );
 };
