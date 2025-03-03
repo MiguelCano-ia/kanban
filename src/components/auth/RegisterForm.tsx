@@ -18,6 +18,9 @@ export const RegisterForm = () => {
     registerUser({ ...state });
   }
 
+  if (state.errors) {
+  }
+
   return (
     <div className="grid gap-6">
       <form action={action}>
@@ -36,7 +39,7 @@ export const RegisterForm = () => {
             />
           </div>
           {state?.errors?.username && (
-            <p className="text-red-500 text-sm">{state.errors.username}</p>
+            <p className="text-destructive text-sm">{state.errors.username}</p>
           )}
           <div className="grid gap-1">
             <Label htmlFor="email">Email</Label>
@@ -51,6 +54,9 @@ export const RegisterForm = () => {
               disabled={pending}
             />
           </div>
+          {state?.errors?.email && (
+            <p className="text-destructive text-sm">{state.errors.email}</p>
+          )}
           <div className="grid gap-1">
             <Label htmlFor="password">Password</Label>
             <Input
@@ -64,13 +70,18 @@ export const RegisterForm = () => {
               disabled={pending}
             />
           </div>
+          {state?.errors?.password && (
+            <p className="text-destructive text-sm">{state.errors.password}</p>
+          )}
           <Button type="submit" disabled={pending}>
             {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Create Account
           </Button>
         </div>
       </form>
-      {state?.errors && <p className="text-red-500">{state.errors.message}</p>}
+      {state?.errors.message && (
+        <p className="text-destructive">{state.errors.message}</p>
+      )}
     </div>
   );
 };
